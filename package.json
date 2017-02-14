@@ -1,0 +1,15 @@
+{
+  "name": "node-glslang",
+  "version": "0.0.0",
+  "private": true,
+  "description": "A node.js wrapper for the Khronos Group's glslang reference compiler front-end.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Mike Post",
+  "license": "BSD-3-Clause",
+  "devDependencies": {
+    "node-cmake": "^2.1.1"
+  }
+}
