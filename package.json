@@ -10,6 +10,8 @@
   "author": "Mike Post",
   "license": "BSD-3-Clause",
   "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-cli": "^1.2.2",
     "node-cmake": "^2.1.1"
   }
 }
