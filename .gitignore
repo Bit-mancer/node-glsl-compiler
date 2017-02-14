@@ -1,0 +1,9 @@
+# Mac files
+.DS_Store
+.com.apple.timemachine.supported
+
+# Logs
+npm-debug.log*
+
+# Modules
+node_modules/
