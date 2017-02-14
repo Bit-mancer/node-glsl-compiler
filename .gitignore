@@ -7,3 +7,9 @@ npm-debug.log*
 
 # Modules
 node_modules/
+
+# Cloned files (should be excluded automatically since these are repos, but let's be pedantic)
+/glslang/
+
+# Generated files
+/build/

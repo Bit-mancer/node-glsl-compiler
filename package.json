@@ -3,17 +3,34 @@
   "version": "0.0.0",
   "private": true,
   "description": "A node.js wrapper for the Khronos Group's glslang reference compiler front-end.",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "homepage": "https://github.com/Bit-mancer/node-glslang",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Bit-mancer/node-glslang.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Bit-mancer/node-glslang/issues"
   },
   "author": "Mike Post",
   "license": "BSD-3-Clause",
+  "main": "index.js",
+  "engines": {
+    "node": ">= 0.9.0"
+  },
+  "scripts": {
+    "test": "\"$(npm bin)/gulp\" test",
+    "gulp": "\"$(npm bin)/gulp\""
+  },
   "devDependencies": {
+    "assert-plus": "^1.0.0",
+    "chalk": "^1.1.3",
     "eslint": "^3.15.0",
     "gulp": "^3.9.1",
     "gulp-cli": "^1.2.2",
     "gulp-eslint": "^3.0.1",
-    "node-cmake": "^2.1.1"
+    "gulp-git": "^1.14.0",
+    "gulp-shell": "^0.5.2",
+    "node-cmake": "^2.1.1",
+    "q": "^1.4.1"
   }
 }
