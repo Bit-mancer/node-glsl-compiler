@@ -2,15 +2,12 @@
 
 /* eslint-disable no-console */
 
+// core dependencies
+// (dev dependencies are required locally in order to reduce the install load for the majority of users)
 var path = require( 'path' );
 var fs = require( 'fs' );
-var assert = require( 'assert-plus' );
-var Q = require( 'q' );
 var gulp = require( 'gulp' );
-var eslint = require( 'gulp-eslint' );
 var shell = require( 'gulp-shell' );
-var git = require( 'gulp-git' );
-var chalk = require( 'chalk' );
 
 
 var GLSLANG_REPO = 'https://github.com/KhronosGroup/glslang.git';
@@ -41,6 +38,12 @@ var paths = {
  */
 function gitCloneTagAsync( repo, tag, path )  {
 
+    // dev dependencies:
+    var assert = require( 'assert-plus' );
+    var Q = require( 'q' );
+    var git = require( 'gulp-git' );
+    var chalk = require( 'chalk' );
+
     assert.string( repo );
     assert.string( tag );
     assert.string( path );
@@ -51,7 +54,8 @@ function gitCloneTagAsync( repo, tag, path )  {
 
         if ( fs.existsSync( path ) ) {
             console.log( chalk.bold( 'The path ' + path + ' exists; skipping git clone for repo ' + repo ) );
-            return deferred.resolve();
+            deferred.resolve();
+            return deferred.promise;
         }
 
         var args = '--branch ' + tag + ' --depth 1 "' + path + '"';
@@ -60,19 +64,23 @@ function gitCloneTagAsync( repo, tag, path )  {
         git.clone( repo, { args: args }, function(err) {
             try {
                 if ( err ) {
-                    return deferred.reject( new Error( '"git clone ' + repo + ' ' + args + '" failed with error: ' + err.message + '\n' + err.stack ) );
+                    deferred.reject( new Error( '"git clone ' + repo + ' ' + args + '" failed with error: ' + err.message + '\n' + err.stack ) );
+                    return;
                 } else {
-                    return deferred.resolve();
+                    deferred.resolve();
+                    return;
                 }
             } catch ( err ) {
-                return deferred.reject( new Error( 'Unhandled exception in gitCloneTagAsync (git.clone callback): ' + err.message + '\n' + err.stack ) );
+                deferred.reject( new Error( 'Unhandled exception in gitCloneTagAsync (git.clone callback): ' + err.message + '\n' + err.stack ) );
+                return;
             }
         } );
 
         return deferred.promise;
 
     } catch ( err ) {
-        return deferred.reject( new Error( 'Unhandled exception in gitCloneTagAsync: ' + err.message + '\n' + err.stack ) );
+        deferred.reject( new Error( 'Unhandled exception in gitCloneTagAsync: ' + err.message + '\n' + err.stack ) );
+        return deferred.promise;
     }
 }
 
@@ -80,6 +88,10 @@ function gitCloneTagAsync( repo, tag, path )  {
 
 
 gulp.task( 'js-lint', function() {
+
+    // dev dependency:
+    var eslint = require( 'gulp-eslint' );
+
     return gulp.src( paths.js )
         .pipe( eslint() )
         .pipe( eslint.format() )
@@ -93,7 +105,7 @@ gulp.task( 'lint-watch', function() {
 });
 
 
-gulp.task( 'test', [ 'verify-native-binaries-exist' ], shell.task( [
+gulp.task( 'test', [ 'verify-native-test-binaries-exist' ], shell.task( [
     paths.nativeTests
 ]));
 
@@ -102,6 +114,10 @@ gulp.task( 'test', [ 'verify-native-binaries-exist' ], shell.task( [
  * Used during development to update the version of the native dependencies
  */
 gulp.task( 'clone', function() {
+
+    // dev dependency:
+    var chalk = require( 'chalk' );
+
     return gitCloneTagAsync( GLSLANG_REPO, GLSLANG_TAG, paths.glslang )
     .then( function() {
         gitCloneTagAsync( GTEST_REPO, GTEST_TAG, paths.gtest );
@@ -119,11 +135,6 @@ gulp.task( 'verify-native-sources-exist', function() {
         // "gulp clone" should have been run...
         throw new Error( 'glslang does not exist! (this indicates a problem in the package development environment)' );
     }
-
-    if ( ! fs.existsSync( paths.gtest ) ) {
-        // "gulp clone" should have been run...
-        throw new Error( 'gtest does not exist! (this indicates a problem in the package development environment)' );
-    }
 });
 
 gulp.task( 'verify-native-configure', ['verify-native-sources-exist'], function() {
@@ -138,9 +149,12 @@ gulp.task( 'verify-native-binaries-exist', ['verify-native-configure'], function
     if ( ! fs.existsSync( paths.nativeValidator ) ) {
         throw new Error( 'The glslangValidator binary does not exist!' );
     }
+});
+
+gulp.task( 'verify-native-test-binaries-exist', ['verify-native-configure'], function() {
 
     if ( ! fs.existsSync( paths.nativeTests ) ) {
-        throw new Error( 'The glslangtests binary does not exist!' );
+        throw new Error( 'The glslangtests binary does not exist! (by default, node-glslang does not include the glslang native tests in order to reduce the package size; to run these tests, first run "npm run task clone", then "npm run task configure", then "npm run task build", then re-run the tests)' );
     }
 });
 
