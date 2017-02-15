@@ -101,7 +101,7 @@ gulp.task( 'js-lint', function() {
 gulp.task( 'lint', ['js-lint'] );
 
 gulp.task( 'lint-watch', function() {
-    gulp.watch( paths.js, ['js-lint'] );
+    return gulp.watch( paths.js, ['js-lint'] );
 });
 
 
@@ -176,7 +176,13 @@ gulp.task( 'clean', ['verify-native-sources-exist'], shell.task( [
 
 
 // Preflight check -- run before filing a PR, etc.
-gulp.task( 'preflight', ['lint', 'configure', 'build', 'test'] );
+gulp.task( 'preflight', function(cb) {
+    // TODO run-sequence is obviated in gulp 4 via gulp.series
+    require( 'run-sequence' )( 'lint', 'configure', 'build', 'test', cb );
+});
 
 // Continuous integration (this is what travis runs)
-gulp.task( 'ci', ['clone', 'preflight'] );
+gulp.task( 'ci', function(cb) {
+    // TODO run-sequence is obviated in gulp 4 via gulp.series
+    require( 'run-sequence' )( 'clone', 'preflight', cb );
+});
