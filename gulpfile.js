@@ -179,4 +179,4 @@ gulp.task( 'clean', ['verify-native-sources-exist'], shell.task( [
 gulp.task( 'preflight', ['lint', 'configure', 'build', 'test'] );
 
 // Continuous integration (this is what travis runs)
-gulp.task( 'ci', ['preflight'] );
+gulp.task( 'ci', ['clone', 'preflight'] );
