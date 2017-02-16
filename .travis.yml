@@ -10,4 +10,9 @@ os:
     - linux
     - osx
 
+addons:
+    apt:
+        packages:
+            - cmake # we need a newer version of cmake on Linux
+
 script: npm run task ci
