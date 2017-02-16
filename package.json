@@ -18,8 +18,8 @@
     "node": ">= 4"
   },
   "scripts": {
-    "test": "\"$(npm bin)/gulp\" test",
-    "task": "\"$(npm bin)/gulp\""
+    "test": "gulp test",
+    "task": "gulp"
   },
   "dependencies": {
     "gulp": "^3.9.1",
