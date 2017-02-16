@@ -10,9 +10,19 @@ os:
     - linux
     - osx
 
+
+# Install g++ 4.8 because we need a C++11 compiler
+# (https://docs.travis-ci.com/user/languages/javascript-with-nodejs#Node.js-v4-(or-io.js-v3)-compiler-requirements)
+
+env:
+    - CXX=g++-4.8
+
 addons:
     apt:
+        sources:
+            - ubuntu-toolchain-r-test
         packages:
+            - g++-4.8
             - cmake # we need a newer version of cmake on Linux
 
 script: npm run task ci
