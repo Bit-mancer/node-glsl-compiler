@@ -8,7 +8,7 @@ node_js:
 
 os:
     - linux
-    - osx
+# FIXME    - osx
 
 
 # Install g++ 4.8 because we need a C++11 compiler
@@ -25,4 +25,7 @@ addons:
             - g++-4.8
             - cmake # we need a newer version of cmake on Linux
 
-script: npm run task ci
+script:
+    - which cmake
+    - cmake --version
+    - npm run task ci

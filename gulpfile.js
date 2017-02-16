@@ -115,15 +115,9 @@ gulp.task( 'test', [ 'verify-native-test-binaries-exist' ], shell.task( [
  */
 gulp.task( 'clone', function() {
 
-    // dev dependency:
-    var chalk = require( 'chalk' );
-
     return gitCloneTagAsync( GLSLANG_REPO, GLSLANG_TAG, paths.glslang )
     .then( function() {
         gitCloneTagAsync( GTEST_REPO, GTEST_TAG, paths.gtest );
-    }).catch( function(err) {
-        console.error( chalk.red( err.message ) );
-        throw err;
     }).done();
 });
 
