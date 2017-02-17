@@ -8,12 +8,11 @@ node_js:
 
 os:
     - linux
-# FIXME    - osx
+    - osx
 
 
 # Install g++ 4.8 because we need a C++11 compiler
 # (https://docs.travis-ci.com/user/languages/javascript-with-nodejs#Node.js-v4-(or-io.js-v3)-compiler-requirements)
-
 env:
     - CXX=g++-4.8
 
@@ -23,9 +22,20 @@ addons:
             - ubuntu-toolchain-r-test
         packages:
             - g++-4.8
-            - cmake # we need a newer version of cmake on Linux
 
-script:
+
+# Travis container-based images only provide a single whitelisted version of cmake via the apt add-on, and we need
+# a newer version of cmake, so let's just build it ourselves
+before_install:
+    - bash .travis-install-cmake.sh "$HOME/cmake"
+    - export PATH=$HOME/cmake/bin:$PATH
     - which cmake
     - cmake --version
-    - npm run task ci
+
+# cache cmake so we don't have to download and build it each time
+cache:
+    directories:
+        - $HOME/cmake
+
+
+script: npm run task ci
