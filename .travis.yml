@@ -28,8 +28,7 @@ addons:
 # a newer version of cmake, so let's just build it ourselves
 before_install:
     - bash .travis-install-cmake.sh "$HOME/cmake"
-    - export PATH=$HOME/cmake/bin:$PATH
-    - which cmake
+    - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export PATH=$HOME/cmake/bin:$PATH; fi
     - cmake --version
 
 # cache cmake so we don't have to download and build it each time
