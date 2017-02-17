@@ -22,7 +22,7 @@ addons:
             - ubuntu-toolchain-r-test
         packages:
             - g++-4.8
-
+            - wget # update wget (default version is too old to understand the cmake.org cert)
 
 # Travis container-based images only provide a single whitelisted version of cmake via the apt add-on, and we need
 # a newer version of cmake, so let's just build it ourselves
