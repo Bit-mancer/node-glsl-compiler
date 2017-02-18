@@ -11,4 +11,4 @@ os:
     - linux
     - osx
 
-script: bash .travis-build.sh
+script: ./.travis-build.sh

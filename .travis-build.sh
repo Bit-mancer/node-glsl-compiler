@@ -26,6 +26,8 @@ else
 fi
 
 
+echo "***TEST***"
+
 env
 cmake --version
 
