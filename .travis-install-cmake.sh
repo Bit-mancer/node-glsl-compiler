@@ -7,8 +7,10 @@ ECHO=$(which echo) || (echo echo not found! && exit 1)
 
 if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
 
-    brew update
-    brew install cmake
+    if [ "$(which cmake)" == "" ]; then
+        brew update
+        brew install cmake
+    fi
 
 elif [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
 
