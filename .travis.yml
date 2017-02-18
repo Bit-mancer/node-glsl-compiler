@@ -1,3 +1,5 @@
+sudo: required
+
 language: node_js
 node_js:
     - "4.0" # our minimum required version
