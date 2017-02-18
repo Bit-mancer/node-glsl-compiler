@@ -14,7 +14,7 @@ os:
 # Install g++ 4.8 because we need a C++11 compiler
 # (https://docs.travis-ci.com/user/languages/javascript-with-nodejs#Node.js-v4-(or-io.js-v3)-compiler-requirements)
 env:
-    - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; CXX=g++-4.8; fi
+    - CXX=g++-4.8
 
 addons:
     apt:
