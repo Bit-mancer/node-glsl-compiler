@@ -11,4 +11,10 @@ os:
     - linux
     - osx
 
+# cache cmake so we don't have to download and build it each time
+cache:
+    directories:
+        - $HOME/cmake
+
+
 script: ./.travis-build.sh
