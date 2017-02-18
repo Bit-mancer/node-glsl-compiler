@@ -48,6 +48,14 @@ function cmakeInstallLinux() {
 }
 
 
+function gppInstallLinux() {
+    sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+    sudo apt-get -qq -y update
+    sudo apt-get -q -y install g++-4.8
+    export CXX=g++-4.8
+}
+
+
 if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
 
     cmakeInstallMac
@@ -55,7 +63,7 @@ if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
 elif [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
 
     cmakeInstallLinux
-    export CXX=g++-4.8
+    gppInstallLinux
 
 else
     "$ECHO" "TRAVIS_OS_NAME is $TRAVIS_OS_NAME; skipping cmake..."
