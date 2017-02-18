@@ -16,8 +16,10 @@ if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
 
 elif [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
 
-    sudo apt-get update -qq
-    sudo apt-get install -qq cmake
+    sudo apt-get -qq update
+    sudo apt-get -q install cmake
+
+    export CXX=g++-4.8
 
 else
     "$ECHO" "TRAVIS_OS_NAME is $TRAVIS_OS_NAME; skipping cmake..."
