@@ -43,6 +43,8 @@ function cmakeInstallLinux() {
     else
         "$ECHO" cmake appears to already exist at $buildDir
     fi
+
+    export PATH=$buildDir/bin:$PATH
 }
 
 
