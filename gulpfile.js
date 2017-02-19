@@ -4,6 +4,7 @@
 
 // core dependencies
 // (dev dependencies are required locally in order to reduce the install load for the majority of users)
+const Promise = require( 'bluebird' );
 const path = require( 'path' );
 const fs = require( 'fs' );
 const gulp = require( 'gulp' );
@@ -40,48 +41,31 @@ function gitCloneTagAsync( repo, tag, path )  {
 
     // dev dependencies:
     const assert = require( 'assert-plus' );
-    const Q = require( 'q' );
-    const git = require( 'gulp-git' );
+    const git = Promise.promisifyAll( require( 'gulp-git' ) );
     const chalk = require( 'chalk' );
 
     assert.string( repo );
     assert.string( tag );
     assert.string( path );
 
-    const deferred = Q.defer();
-
-    try {
+    return new Promise( (resolve, reject) => {
 
         if ( fs.existsSync( path ) ) {
             console.log( chalk.bold( `The path ${path} exists; skipping git clone for repo ${repo}` ) );
-            deferred.resolve();
-            return deferred.promise;
+            return resolve();
         }
 
         const args = `--branch ${tag} --depth 1 "${path}"`;
         console.log( chalk.bold( `=> git clone ${repo} ${args}` ) );
 
-        git.clone( repo, { args: args }, (err) => {
-            try {
-                if ( err ) {
-                    deferred.reject( new Error( `"git clone ${repo} ${args}" failed with error: ${err.message}\n${err.stack}` ) );
-                    return;
-                } else {
-                    deferred.resolve();
-                    return;
-                }
-            } catch ( err ) {
-                deferred.reject( new Error( `Unhandled exception in gitCloneTagAsync (git.clone callback): ${err.message}\n${err.stack}` ) );
-                return;
-            }
-        } );
-
-        return deferred.promise;
-
-    } catch ( err ) {
-        deferred.reject( new Error( `Unhandled exception in gitCloneTagAsync: ${err.message}\n${err.stack}` ) );
-        return deferred.promise;
-    }
+        git.cloneAsync( repo, { args: args } )
+        .then( () => {
+            resolve();
+        })
+        .catch( (err) => {
+            reject( new Error( `"git clone ${repo} ${args}" failed with error: ${err.message}\n${err.stack}` ) );
+        });
+    });
 }
 
 
@@ -117,8 +101,8 @@ gulp.task( 'clone', () => {
 
     return gitCloneTagAsync( GLSLANG_REPO, GLSLANG_TAG, paths.glslang )
     .then( () => {
-        gitCloneTagAsync( GTEST_REPO, GTEST_TAG, paths.gtest );
-    }).done();
+        return gitCloneTagAsync( GTEST_REPO, GTEST_TAG, paths.gtest );
+    });
 });
 
 

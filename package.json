@@ -22,6 +22,7 @@
     "task": "gulp"
   },
   "dependencies": {
+    "bluebird": "^3.4.7",
     "gulp": "^3.9.1",
     "gulp-cli": "^1.2.2",
     "gulp-shell": "^0.5.2",
@@ -33,7 +34,6 @@
     "eslint": "^3.15.0",
     "gulp-eslint": "^3.0.1",
     "gulp-git": "^1.14.0",
-    "q": "^1.4.1",
     "run-sequence": "^1.2.2"
   }
 }
