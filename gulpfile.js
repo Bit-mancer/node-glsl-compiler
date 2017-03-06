@@ -4,7 +4,6 @@
 
 // core dependencies
 // (dev dependencies are required locally in order to reduce the install load for the majority of users)
-const Promise = require( 'bluebird' );
 const path = require( 'path' );
 const fs = require( 'fs' );
 const gulp = require( 'gulp' );
@@ -41,6 +40,7 @@ function gitCloneTagAsync( repo, tag, path )  {
 
     // dev dependencies:
     const assert = require( 'assert-plus' );
+    const Promise = require( 'bluebird' );
     const git = Promise.promisifyAll( require( 'gulp-git' ) );
     const chalk = require( 'chalk' );
 
