@@ -34,6 +34,7 @@ glslang.spirvRemapAsync = options => {
  * @param {string} binary The name of executable
  * @param {Object} options The options hash
  * @return {Promise} .
+ * @private
  */
 function execGlslangBinary( binary, options ) {
 
