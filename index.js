@@ -19,7 +19,7 @@ require( './lib/polyfill.js' );
 
 
 
-module.exports = {};
+module.exports = { standalone: {} };
 
 const kStandAlonePath = path.join( __dirname, 'build', 'glslang', 'StandAlone' );
 
@@ -38,7 +38,7 @@ const kStandAlonePath = path.join( __dirname, 'build', 'glslang', 'StandAlone' )
  * // terminal equivalent (create SPIR-V binary under GL semantics, output to vert.spv, input pass.vert):
  * //     glslangValidator -G -o vert.spv pass.vert
  * const glslang = require( 'node-glslang' );
- * glslang.glslangValidatorAsync( { args: ['-G', '-o', 'vert.spv', 'pass.vert'] } )
+ * glslang.standalone.glslangValidatorAsync( { args: ['-G', '-o', 'vert.spv', 'pass.vert'] } )
  * .then( () => {
  *     // ...
  * }).catch( err => {
@@ -46,7 +46,7 @@ const kStandAlonePath = path.join( __dirname, 'build', 'glslang', 'StandAlone' )
  * });
  * @example
  * const glslang = require( 'node-glslang' );
- * glslang.glslangValidatorAsync( {
+ * glslang.standalone.glslangValidatorAsync( {
  *     args: ['-G', '-o', 'vert.spv', 'pass.vert'],
  *     stdout: buffer => console.log( buffer.toString() )
  * }).then( () => {
@@ -58,7 +58,7 @@ const kStandAlonePath = path.join( __dirname, 'build', 'glslang', 'StandAlone' )
  * @see {@link https://github.com/KhronosGroup/glslang}
  * @public
  */
-module.exports.glslangValidatorAsync = options => {
+module.exports.standalone.glslangValidatorAsync = options => {
     return execGlslangBinary( 'glslangValidator', options );
 };
 
@@ -77,7 +77,7 @@ module.exports.glslangValidatorAsync = options => {
  * // terminal equivalent (perform all optimizations, input vert.spv, output to directory ./output):
  * //     spirv-remap --do-everything --input vert.spv -o ./output
  * const glslang = require( 'node-glslang' );
- * glslang.spirvRemapAsync( { args: ['--do-everything', '--input', 'vert.spv', '-o', './output'] } )
+ * glslang.standalone.spirvRemapAsync( { args: ['--do-everything', '--input', 'vert.spv', '-o', './output'] } )
  * .then( () => {
  *     // ...
  * }).catch( err => {
@@ -85,7 +85,7 @@ module.exports.glslangValidatorAsync = options => {
  * });
  * @example
  * const glslang = require( 'node-glslang' );
- * glslang.spirvRemapAsync( {
+ * glslang.standalone.spirvRemapAsync( {
  *     args: ['--do-everything', '--input', 'vert.spv', '-o', './output'],
  *     stdout: buffer => console.log( buffer.toString() )
  * }).then( () => {
@@ -97,7 +97,7 @@ module.exports.glslangValidatorAsync = options => {
  * @see {@link https://github.com/KhronosGroup/glslang/blob/master/README-spirv-remap.txt}
  * @public
  */
-module.exports.spirvRemapAsync = options => {
+module.exports.standalone.spirvRemapAsync = options => {
     return execGlslangBinary( 'spirv-remap', options );
 };
 

@@ -8,15 +8,15 @@ const kVertSpirv = path.join( '.', 'spirv', 'vert.spv' );
 const kFragSpirv = path.join( '.', 'spirv', 'frag.spv' );
 const kOptimizedDir = path.join( '.', 'spirv-optimized' );
 
-glslang.glslangValidatorAsync( { args: 'pass.frag' } )
+glslang.standalone.glslangValidatorAsync( { args: 'pass.frag' } )
 .then( () => {
-    return glslang.glslangValidatorAsync( { args: 'fail.frag' } )
+    return glslang.standalone.glslangValidatorAsync( { args: 'fail.frag' } )
     // swallow error because we expect a failure:
     .catch( (err) => {} ); // eslint-disable-line no-unused-vars
 }).then( () => {
-    return glslang.glslangValidatorAsync( { args: ['-G', '-o', kVertSpirv, 'pass.vert'] });
+    return glslang.standalone.glslangValidatorAsync( { args: ['-G', '-o', kVertSpirv, 'pass.vert'] });
 }).then( () => {
-    return glslang.glslangValidatorAsync( { args: ['-G', '-o', kFragSpirv, 'pass.frag'] });
+    return glslang.standalone.glslangValidatorAsync( { args: ['-G', '-o', kFragSpirv, 'pass.frag'] });
 }).then( () => {
-    return glslang.spirvRemapAsync( { args: ['--do-everything', '--input', kVertSpirv, kFragSpirv, '-o', kOptimizedDir] });
+    return glslang.standalone.spirvRemapAsync( { args: ['--do-everything', '--input', kVertSpirv, kFragSpirv, '-o', kOptimizedDir] });
 });
