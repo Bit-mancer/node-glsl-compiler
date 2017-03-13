@@ -22,9 +22,9 @@
     "task": "gulp"
   },
   "directories": {
-      "lib": "./lib",
-      "doc": "./doc",
-      "example": "./example"
+    "lib": "./lib",
+    "doc": "./doc",
+    "example": "./example"
   },
   "dependencies": {
     "assert-plus": "^1.0.0",
@@ -35,13 +35,15 @@
     "node-cmake": "^2.1.1"
   },
   "devDependencies": {
-    "chalk": "^1.1.3",
     "bluebird": "^3.4.7",
+    "chalk": "^1.1.3",
     "del": "^2.2.2",
     "eslint": "^3.15.0",
     "gulp-eslint": "^3.0.1",
     "gulp-git": "^1.14.0",
+    "gulp-jest": "^1.0.0",
     "gulp-jsdoc3": "^1.0.1",
+    "jest-cli": "^19.0.2",
     "jsdoc": "^3.4.3",
     "run-sequence": "^1.2.2"
   }

@@ -37,6 +37,8 @@ const paths = {
     jsDev: [ './example/**/*.js' ], // excluded from documentation
     cpp: [ '*.cpp', './src/**/*.cpp' ],
     cmake: [ 'NodeJS.cmake', 'CMakeLists.txt' ],
+    testDir: [ './test' ],
+    tests: [ './test/**/*.test.js' ],
 
     // handle path separator differences ourselves for the following:
     glslang: path.join( __dirname, GLSLANG_DIR ),
@@ -56,36 +58,32 @@ const paths = {
  * @param {string} path The path to clone the repo to.
  * @return {Promise} .
  */
-function gitCloneTagAsync( repo, tag, path )  {
+function gitCloneTagAsync( repo, tag, path ) {
 
-    // dev dependencies:
-    const chalk = require( 'chalk' );
-    const git = Promise.promisifyAll( require( 'gulp-git' ) );
+    return Promise.try( () => {
 
-    assert.string( repo );
-    assert.string( tag );
-    assert.string( path );
+        // dev dependencies:
+        const chalk = require( 'chalk' );
+        const git = Promise.promisifyAll( require( 'gulp-git' ) );
 
-    return new Promise( (resolve, reject) => {
+        assert.string( repo );
+        assert.string( tag );
+        assert.string( path );
 
         if ( fs.existsSync( path ) ) {
             console.log( chalk.bold( `The path ${path} exists; skipping git clone for repo ${repo}` ) );
-            return resolve();
+            return;
         }
 
         const args = `--branch ${tag} --depth 1 "${path}"`;
         console.log( chalk.bold( `=> git clone ${repo} ${args}` ) );
 
-        git.cloneAsync( repo, { args: args } )
-        .then( () => {
-            resolve();
-        })
+        return git.cloneAsync( repo, { args: args } )
         .catch( err => {
-            reject( new Error( `"git clone ${repo} ${args}" failed with error: ${err.message}\n${err.stack}` ) );
+            throw new Error( `"git clone ${repo} ${args}" failed with error: ${err.message}\n${err.stack}` );
         });
     });
 }
-
 
 
 
@@ -94,7 +92,7 @@ gulp.task( 'js-lint', () => {
     // dev dependency:
     const eslint = require( 'gulp-eslint' );
 
-    return gulp.src( paths.js.concat( paths.jsDev.concat( paths.config ) ) )
+    return gulp.src( paths.js.concat( paths.jsDev.concat( paths.config.concat( paths.tests ) ) ) )
         .pipe( eslint() )
         .pipe( eslint.format() )
         .pipe( eslint.failAfterError() );
@@ -103,14 +101,33 @@ gulp.task( 'js-lint', () => {
 gulp.task( 'lint', ['js-lint'] );
 
 gulp.task( 'lint-watch', () => {
-    gulp.watch( paths.js.concat( paths.jsDev.concat( paths.config ) ), ['js-lint'] );
+    gulp.watch( paths.js.concat( paths.jsDev.concat( paths.config.concat( paths.tests ) ) ), ['js-lint'] );
     gulp.watch( paths.cmake.concat( paths.cpp ), ['build'] ); // eh not exactly linting, but good enough for this small project
 });
 
 
-gulp.task( 'test', [ 'verify-native-test-binaries-exist' ], shell.task( [
+gulp.task( 'native-test', [ 'verify-native-test-binaries-exist' ], shell.task( [
     paths.nativeTests
 ]));
+
+gulp.task( 'js-test', () => {
+    // dev dependency:
+    const jest = require( 'gulp-jest' ).default;
+
+    return gulp.src( paths.testDir )
+        .pipe( jest( {
+            config: {
+                testRegex: '.*\\.test\\.js$'
+            }
+        }));
+});
+
+gulp.task( 'test', ['js-test', 'native-test'] );
+
+gulp.task( 'test-watch', () => {
+    gulp.watch( paths.js.concat( paths.tests ), ['js-test'] );
+    gulp.watch( paths.cmake.concat( paths.cpp ), ['build'] );
+});
 
 
 gulp.task( 'clean-doc', () => {
