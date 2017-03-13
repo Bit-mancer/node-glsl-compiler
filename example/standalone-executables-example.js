@@ -18,5 +18,5 @@ glslang.glslangValidatorAsync( { args: 'pass.frag' } )
 }).then( () => {
     return glslang.glslangValidatorAsync( { args: ['-G', '-o', kFragSpirv, 'pass.frag'] });
 }).then( () => {
-    return glslang.spirvRemapAsync( { args: ['-v', '--do-everything', '--input', kVertSpirv, kFragSpirv, '-o', kOptimizedDir] });
+    return glslang.spirvRemapAsync( { args: ['--do-everything', '--input', kVertSpirv, kFragSpirv, '-o', kOptimizedDir] });
 });

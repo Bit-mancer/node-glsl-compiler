@@ -1,5 +1,9 @@
 'use strict';
 
+/**
+ * @module node-glslang
+ */
+
 // Core node modules
 const path = require( 'path' );
 const spawn = require( 'child_process' ).spawn;
@@ -14,16 +18,86 @@ const ProcessError = require( './lib/ProcessError.js' );
 require( './lib/polyfill.js' );
 
 
-const standalonePath = path.join( __dirname, 'build', 'glslang', 'StandAlone' );
+
+module.exports = {};
+
+const kStandAlonePath = path.join( __dirname, 'build', 'glslang', 'StandAlone' );
 
 
-const glslang = {};
-
-glslang.glslangValidatorAsync = options => {
+/**
+ * Asynchronously calls the stand-alone glslangValidator executable.
+ *
+ * This method is provided as a mechanism to use glslang functionality that is not exposed via the regular node-glslang API.
+ * @param {Object} options Options hash containing the following keys:
+ * * `args` __(required)__ a string, or an array of strings, to pass to the executable.
+ * * `stdout` _(optional)_ a callback function that receives a {@linkcode Buffer} parameter whenever the executable writes data to stdout.
+ * * `stderr` _(optional)_ a callback function that receives a {@linkcode Buffer} parameter whenever the executable writes data to stderr.
+ * @returns {Promise} A {@linkcode Promise}; the resolver receives nothing, and the rejector receives a {@link ProcessError}.
+ * @throws {AssertionError} if {@linkcode options} is malformed (all other error conditions are communicated via the returned Promise).
+ * @example
+ * // terminal equivalent (create SPIR-V binary under GL semantics, output to vert.spv, input pass.vert):
+ * //     glslangValidator -G -o vert.spv pass.vert
+ * const glslang = require( 'node-glslang' );
+ * glslang.glslangValidatorAsync( { args: ['-G', '-o', 'vert.spv', 'pass.vert'] } )
+ * .then( () => {
+ *     // ...
+ * }).catch( err => {
+ *     // ...
+ * });
+ * @example
+ * const glslang = require( 'node-glslang' );
+ * glslang.glslangValidatorAsync( {
+ *     args: ['-G', '-o', 'vert.spv', 'pass.vert'],
+ *     stdout: buffer => console.log( buffer.toString() )
+ * }).then( () => {
+ *     // ...
+ * }).catch( err => {
+ *     // ...
+ * });
+ * @see {@link https://www.khronos.org/opengles/sdk/tools/Reference-Compiler/}
+ * @see {@link https://github.com/KhronosGroup/glslang}
+ * @public
+ */
+module.exports.glslangValidatorAsync = options => {
     return execGlslangBinary( 'glslangValidator', options );
 };
 
-glslang.spirvRemapAsync = options => {
+
+/**
+ * Asynchronously calls the stand-alone spirv-remap executable.
+ *
+ * This method is provided as a mechanism to use glslang functionality that is not exposed via the regular node-glslang API.
+ * @param {Object} options Options hash containing the following keys:
+ * * `args` __(required)__ a string, or an array of strings, to pass to the executable.
+ * * `stdout` _(optional)_ a callback function that receives a {@linkcode Buffer} parameter whenever the executable writes data to stdout.
+ * * `stderr` _(optional)_ a callback function that receives a {@linkcode Buffer} parameter whenever the executable writes data to stderr.
+ * @returns {Promise} A {@linkcode Promise}; the resolver receives nothing, and the rejector receives a {@link ProcessError}.
+ * @throws {AssertionError} if {@linkcode options} is malformed (all other error conditions are communicated via the returned Promise).
+ * @example
+ * // terminal equivalent (perform all optimizations, input vert.spv, output to directory ./output):
+ * //     spirv-remap --do-everything --input vert.spv -o ./output
+ * const glslang = require( 'node-glslang' );
+ * glslang.spirvRemapAsync( { args: ['--do-everything', '--input', 'vert.spv', '-o', './output'] } )
+ * .then( () => {
+ *     // ...
+ * }).catch( err => {
+ *     // ...
+ * });
+ * @example
+ * const glslang = require( 'node-glslang' );
+ * glslang.spirvRemapAsync( {
+ *     args: ['--do-everything', '--input', 'vert.spv', '-o', './output'],
+ *     stdout: buffer => console.log( buffer.toString() )
+ * }).then( () => {
+ *     // ...
+ * }).catch( err => {
+ *     // ...
+ * });
+ * @see {@link https://www.khronos.org/opengles/sdk/tools/Reference-Compiler/}
+ * @see {@link https://github.com/KhronosGroup/glslang/blob/master/README-spirv-remap.txt}
+ * @public
+ */
+module.exports.spirvRemapAsync = options => {
     return execGlslangBinary( 'spirv-remap', options );
 };
 
@@ -52,7 +126,7 @@ function execGlslangBinary( binary, options ) {
 
     return new Promise( (resolve, reject) => {
 
-        const proc = spawn( path.join( standalonePath, binary ), options.args );
+        const proc = spawn( path.join( kStandAlonePath, binary ), options.args );
 
         if ( options.stdout ) {
             assert.func( options.stdout, `"options.stdout" must be a function (was of type ${typeof options.stdout})` );
@@ -80,13 +154,10 @@ function execGlslangBinary( binary, options ) {
             }
 
             if ( code === 0 ) {
-                resolve( code );
+                resolve();
             } else {
                 reject( new ProcessError( code ) );
             }
         });
     });
 }
-
-
-module.exports = glslang;
