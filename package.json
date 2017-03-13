@@ -21,6 +21,11 @@
     "test": "gulp test",
     "task": "gulp"
   },
+  "directories": {
+      "lib": "./lib",
+      "doc": "./doc",
+      "example": "./example"
+  },
   "dependencies": {
     "assert-plus": "^1.0.0",
     "gulp": "^3.9.1",
