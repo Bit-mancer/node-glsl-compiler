@@ -213,7 +213,7 @@ gulp.task( 'submit-coverage', ['js-test-coverage'], () => {
 // Preflight check -- run before filing a PR, etc.
 gulp.task( 'preflight', (cb) => {
     // TODO run-sequence is obviated in gulp 4 via gulp.series
-    require( 'run-sequence' )( 'lint', 'doc', 'configure', 'build', 'test', cb );
+    require( 'run-sequence' )( 'lint', 'doc', 'configure', 'build', 'native-test', 'js-test-coverage', cb );
 });
 
 // Continuous integration (this is what travis runs)
