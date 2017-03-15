@@ -43,6 +43,7 @@ const paths = {
     build: path.join( __dirname, BUILD_DIR ),
     nativeValidator: path.join( __dirname, BUILD_DIR, 'glslang', 'StandAlone', 'glslangValidator' ),
     nativeTests: path.join( __dirname, BUILD_DIR, 'glslang', 'gtests', 'glslangtests' ),
+    lcov: path.join( __dirname, 'coverage', 'lcov.info' ),
     docOutput: path.join( __dirname, 'doc' ) // must match value in jsdoc-config.json
 };
 
@@ -207,7 +208,7 @@ gulp.task( 'clean', ['verify-native-sources-exist'], () => {
 gulp.task( 'submit-coverage', ['js-test-coverage'], () => {
     // dev dependencies:
     const coveralls = require( 'gulp-coveralls' );
-    return gulp.src( paths.coverage ).pipe( coveralls() );
+    return gulp.src( paths.lcov ).pipe( coveralls() );
 });
 
 // Preflight check -- run before filing a PR, etc.
