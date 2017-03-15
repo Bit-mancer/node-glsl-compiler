@@ -11,4 +11,5 @@ node_modules/
 # Generated files
 /build/
 /doc/
+/coverage/
 /example/**/*.spv

@@ -12,13 +12,12 @@ const fs = require( 'fs' );
 // Public NPM modules
 const assert = require( 'assert-plus' );
 const gulp = require( 'gulp' );
-const shell = require( 'gulp-shell' );
 const Promise = require( 'bluebird' );
 const jsdoc = require( 'gulp-jsdoc3' );
 const del = require( 'del' );
 
 // Local modules
-
+const spawnAsync = require( './lib/spawnProcessAsync.js' );
 
 
 const GLSLANG_REPO = 'https://github.com/KhronosGroup/glslang.git';
@@ -33,12 +32,10 @@ const paths = {
     // gulp will handle path separator differences for the following:
     readme: [ 'README.md' ],
     config: [ '.eslintrc.js', 'gulpfile.js' ],
-    js: [ 'index.js', './lib/**/*.js' ],
+    js: [ 'index.js', 'index.test.js', './lib/**/*.js' ],
     jsDev: [ './example/**/*.js' ], // excluded from documentation
     cpp: [ '*.cpp', './src/**/*.cpp' ],
     cmake: [ 'NodeJS.cmake', 'CMakeLists.txt' ],
-    testDir: [ './test' ],
-    tests: [ './test/**/*.test.js' ],
 
     // handle path separator differences ourselves for the following:
     glslang: path.join( __dirname, GLSLANG_DIR ),
@@ -64,7 +61,7 @@ function gitCloneTagAsync( repo, tag, path ) {
 
         // dev dependencies:
         const chalk = require( 'chalk' );
-        const git = Promise.promisifyAll( require( 'gulp-git' ) );
+        const gitCloneAsync = Promise.promisify( require( 'gulp-git' ).clone );
 
         assert.string( repo );
         assert.string( tag );
@@ -78,7 +75,7 @@ function gitCloneTagAsync( repo, tag, path ) {
         const args = `--branch ${tag} --depth 1 "${path}"`;
         console.log( chalk.bold( `=> git clone ${repo} ${args}` ) );
 
-        return git.cloneAsync( repo, { args: args } )
+        return gitCloneAsync( repo, { args: args } )
         .catch( err => {
             throw new Error( `"git clone ${repo} ${args}" failed with error: ${err.message}\n${err.stack}` );
         });
@@ -92,7 +89,7 @@ gulp.task( 'js-lint', () => {
     // dev dependency:
     const eslint = require( 'gulp-eslint' );
 
-    return gulp.src( paths.js.concat( paths.jsDev.concat( paths.config.concat( paths.tests ) ) ) )
+    return gulp.src( paths.js.concat( paths.jsDev.concat( paths.config ) ) )
         .pipe( eslint() )
         .pipe( eslint.format() )
         .pipe( eslint.failAfterError() );
@@ -101,32 +98,29 @@ gulp.task( 'js-lint', () => {
 gulp.task( 'lint', ['js-lint'] );
 
 gulp.task( 'lint-watch', () => {
-    gulp.watch( paths.js.concat( paths.jsDev.concat( paths.config.concat( paths.tests ) ) ), ['js-lint'] );
+    gulp.watch( paths.js.concat( paths.jsDev.concat( paths.config ) ), ['js-lint'] );
     gulp.watch( paths.cmake.concat( paths.cpp ), ['build'] ); // eh not exactly linting, but good enough for this small project
 });
 
 
-gulp.task( 'native-test', [ 'verify-native-test-binaries-exist' ], shell.task( [
-    paths.nativeTests
-]));
+gulp.task( 'native-test', [ 'verify-native-test-binaries-exist' ], () => {
+    return spawnAsync( paths.nativeTests, { args: '--gtest_color=yes' } );
+});
+
 
 gulp.task( 'js-test', () => {
-    // dev dependency:
-    const jest = require( 'gulp-jest' ).default;
+    return spawnAsync( 'jest', { args: ['--config=jest-config.json', '--colors'] } );
+});
 
-    return gulp.src( paths.testDir )
-        .pipe( jest( {
-            config: {
-                testRegex: '.*\\.test\\.js$'
-            }
-        }));
+gulp.task( 'js-test-coverage', () => {
+    return spawnAsync( 'jest', { args: ['--config=jest-config.json', '--colors', '--coverage'] } );
 });
 
 gulp.task( 'test', ['js-test', 'native-test'] );
 
+// prefer 'npm run test-watch' (jest's native watching is superior to what we can do here -- we offer this for completeness since everything else is piped through gulp)
 gulp.task( 'test-watch', () => {
-    gulp.watch( paths.js.concat( paths.tests ), ['js-test'] );
-    gulp.watch( paths.cmake.concat( paths.cpp ), ['build'] );
+    return spawnAsync( 'npm', { args: ['run', 'test-watch'] } );
 });
 
 
@@ -137,9 +131,9 @@ gulp.task( 'clean-doc', () => {
 gulp.task( 'doc', ['clean-doc'], (cb) => {
     // dev dependencies:
     const chalk = require( 'chalk' );
-    const git = Promise.promisifyAll( require( 'gulp-git' ) );
+    const gitStatusAsync = Promise.promisify( require( 'gulp-git' ).status );
 
-    git.statusAsync( { args:'--porcelain', quiet: true } )
+    gitStatusAsync( { args:'--porcelain', quiet: true } )
     .then( stdout => {
         if ( stdout !== '' ) {
             console.warn( chalk.yellow( '\n !!! Documentation is being generated on a git working tree that is not in a clean state !!!\n' ) );
@@ -194,22 +188,27 @@ gulp.task( 'verify-native-test-binaries-exist', ['verify-native-configure'], () 
     }
 });
 
-gulp.task( 'configure', ['verify-native-sources-exist'], shell.task( [
-    'ncmake configure'
-]));
+gulp.task( 'configure', ['verify-native-sources-exist'], () => {
+    return spawnAsync( 'ncmake', { args: 'configure' } );
+});
 
-gulp.task( 'build', ['verify-native-configure'], shell.task( [
-    'ncmake build'
-]));
+gulp.task( 'build', ['verify-native-configure'], () => {
+    return spawnAsync( 'ncmake', { args: 'build' } );
+});
 
-gulp.task( 'rebuild', ['verify-native-configure'], shell.task( [
-    'ncmake rebuild'
-]));
+gulp.task( 'rebuild', ['verify-native-configure'], () => {
+    return spawnAsync( 'ncmake', { args: 'rebuild' } );
+});
 
-gulp.task( 'clean', ['verify-native-sources-exist'], shell.task( [
-    'ncmake clean'
-]));
+gulp.task( 'clean', ['verify-native-sources-exist'], () => {
+    return spawnAsync( 'ncmake', { args: 'clean' } );
+});
 
+gulp.task( 'submit-coverage', ['js-test-coverage'], () => {
+    // dev dependencies:
+    const coveralls = require( 'gulp-coveralls' );
+    return gulp.src( paths.coverage ).pipe( coveralls() );
+});
 
 // Preflight check -- run before filing a PR, etc.
 gulp.task( 'preflight', (cb) => {
@@ -220,5 +219,5 @@ gulp.task( 'preflight', (cb) => {
 // Continuous integration (this is what travis runs)
 gulp.task( 'ci', (cb) => {
     // TODO run-sequence is obviated in gulp 4 via gulp.series
-    require( 'run-sequence' )( 'clone', 'preflight', cb );
+    require( 'run-sequence' )( 'clone', 'lint', 'doc', 'configure', 'build', 'native-test', 'submit-coverage', cb );
 });

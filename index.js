@@ -2,17 +2,11 @@
 
 // Core node modules
 const path = require( 'path' );
-const spawn = require( 'child_process' ).spawn;
 
 // Public NPM modules
-const assert = require( 'assert-plus' );
-const Promise = require( 'bluebird' );
 
 // Local modules
-const ProcessError = require( './lib/ProcessError.js' );
-
-require( './lib/polyfill.js' );
-
+const spawnAsync = require( './lib/spawnProcessAsync.js' );
 
 
 const kStandAlonePath = path.join( __dirname, 'build', 'glslang', 'StandAlone' );
@@ -28,7 +22,6 @@ const kStandAlonePath = path.join( __dirname, 'build', 'glslang', 'StandAlone' )
 module.exports = {
 
     /**
-     * (we need to export this property as a separate module in order to get jsdoc to generate documentation)
      * @exports node-glslang.standalone
      */
     standalone: {
@@ -36,13 +29,16 @@ module.exports = {
         /**
          * Asynchronously calls the stand-alone glslangValidator executable.
          *
+         * By default, the child process stdout and stderr are written to the parent process streams (see the {@linkcode quiet} option).
+         *
          * This method is provided as a mechanism to use glslang functionality that is not exposed via the regular node-glslang API.
          * @param {Object} options Options hash containing the following keys:
-         * * `args` __(required)__ a string, or an array of strings, to pass to the executable.
-         * * `stdout` _(optional)_ a callback function that receives a {@linkcode Buffer} parameter whenever the executable writes data to stdout.
-         * * `stderr` _(optional)_ a callback function that receives a {@linkcode Buffer} parameter whenever the executable writes data to stderr.
-         * @returns {Promise} A {@link http://bluebirdjs.com/ Bluebird} {@linkcode Promise} ("duck"-compatible with ES6 Promise); the resolver receives nothing, and the rejector receives an {@linkcode AssertionError} (if the options hash is malformed) or a {@link ProcessError}.
-         * @example
+         * * `args` __(optional)__ _String or Array-of-strings_ -- The arguments to pass to the executable.
+         * * `quiet` __(optional)__ _Boolean_ -- if true, the child process stdout and stderr will NOT be written to the parent process streams (_default: false_).
+         * * `stdout` __(optional)__ _Function_ -- a callback that receives a {@linkcode Buffer} parameter whenever the child process writes data to stdout.
+         * * `stderr` __(optional)__ _Function_ -- a callback that receives a {@linkcode Buffer} parameter whenever the child process writes data to stderr.
+         * @returns {Promise} A promise object that is "duck"-compatible with ES6 Promise ({@link http://bluebirdjs.com/ Bluebird}). The resolver receives nothing, and the rejector receives an {@linkcode AssertionError} (if the options hash is malformed), or a {@link ProcessError} (if there is an error launching or terminating the child process). The promise will throw if an error is raised and no catch() handler has been attached.
+         * @example <caption>Basic example:</caption>
          * // terminal equivalent (create SPIR-V binary under GL semantics, output to vert.spv, input pass.vert):
          * //     glslangValidator -G -o vert.spv pass.vert
          * const glslang = require( 'node-glslang' );
@@ -52,7 +48,17 @@ module.exports = {
          * }).catch( err => {
          *     // ...
          * });
-         * @example
+         * @example <caption>Send child process stdout and stderr to the console:</caption>
+         * const glslang = require( 'node-glslang' );
+         * glslang.standalone.glslangValidatorAsync( {
+         *     args: ['-G', '-o', 'vert.spv', 'pass.vert'],
+         *     console: true
+         * }).then( () => {
+         *     // ...
+         * }).catch( err => {
+         *     // ...
+         * });
+         * @example <caption>Handle stdout ourselves (stderr will be ignored in this case):</caption>
          * const glslang = require( 'node-glslang' );
          * glslang.standalone.glslangValidatorAsync( {
          *     args: ['-G', '-o', 'vert.spv', 'pass.vert'],
@@ -67,20 +73,24 @@ module.exports = {
          * @public
          */
         glslangValidatorAsync( options ) {
-            return execGlslangBinary( 'glslangValidator', options );
+            // return execGlslangBinary( 'glslangValidator', options );
+            return spawnAsync( path.join( kStandAlonePath, 'glslangValidator' ), options );
         },
 
 
         /**
          * Asynchronously calls the stand-alone spirv-remap executable.
          *
+         * By default, the child process stdout and stderr are written to the parent process streams (see the {@linkcode quiet} option).
+         *
          * This method is provided as a mechanism to use glslang functionality that is not exposed via the regular node-glslang API.
          * @param {Object} options Options hash containing the following keys:
-         * * `args` __(required)__ a string, or an array of strings, to pass to the executable.
-         * * `stdout` _(optional)_ a callback function that receives a {@linkcode Buffer} parameter whenever the executable writes data to stdout.
-         * * `stderr` _(optional)_ a callback function that receives a {@linkcode Buffer} parameter whenever the executable writes data to stderr.
-         * @returns {Promise} A {@link http://bluebirdjs.com/ Bluebird} {@linkcode Promise} ("duck"-compatible with ES6 Promise); the resolver receives nothing, and the rejector receives an {@linkcode AssertionError} (if the options hash is malformed) or a {@link ProcessError}.
-         * @example
+         * * `args` __(optional)__ _String or Array-of-strings_ -- The arguments to pass to the executable.
+         * * `quiet` __(optional)__ _Boolean_ -- if true, the child process stdout and stderr will NOT be written to the parent process streams (_default: false_).
+         * * `stdout` __(optional)__ _Function_ -- a callback that receives a {@linkcode Buffer} parameter whenever the child process writes data to stdout.
+         * * `stderr` __(optional)__ _Function_ -- a callback that receives a {@linkcode Buffer} parameter whenever the child process writes data to stderr.
+         * @returns {Promise} A promise object that is "duck"-compatible with ES6 Promise ({@link http://bluebirdjs.com/ Bluebird}). The resolver receives nothing, and the rejector receives an {@linkcode AssertionError} (if the options hash is malformed), or a {@link ProcessError} (if there is an error launching or terminating the child process). The promise will throw if an error is raised and no catch() handler has been attached.
+         * @example <caption>Basic example:</caption>
          * // terminal equivalent (perform all optimizations, input vert.spv, output to directory ./output):
          * //     spirv-remap --do-everything --input vert.spv -o ./output
          * const glslang = require( 'node-glslang' );
@@ -90,7 +100,17 @@ module.exports = {
          * }).catch( err => {
          *     // ...
          * });
-         * @example
+         * @example <caption>Send child process stdout and stderr to the console:</caption>
+         * const glslang = require( 'node-glslang' );
+         * glslang.standalone.spirvRemapAsync( {
+         *     args: ['--do-everything', '--input', 'vert.spv', '-o', './output'],
+         *     console: true
+         * }).then( () => {
+         *     // ...
+         * }).catch( err => {
+         *     // ...
+         * });
+         * @example <caption>Handle stdout ourselves (stderr will be ignored in this case):</caption>
          * const glslang = require( 'node-glslang' );
          * glslang.standalone.spirvRemapAsync( {
          *     args: ['--do-everything', '--input', 'vert.spv', '-o', './output'],
@@ -105,68 +125,7 @@ module.exports = {
          * @public
          */
         spirvRemapAsync( options ) {
-            return execGlslangBinary( 'spirv-remap', options );
+            return spawnAsync( path.join( kStandAlonePath, 'spirv-remap' ), options );
         }
     }
 };
-
-
-
-/**
- * Launches a glslang executable
- * @param {string} binary The name of executable
- * @param {Object} options The options hash
- * @return {Promise} .
- * @private
- */
-function execGlslangBinary( binary, options ) {
-
-    return new Promise( (resolve, reject) => {
-
-        options = options || {};
-
-        assert.object( options, 'The first argument must be an options hash/object.' );
-
-        if ( Array.isArray( options.args ) ) {
-            assert.arrayOfString( options.args, 'The options hash must contain an "args" key, with a string or array-of-strings value (array didn\'t contain strings).' );
-        } else {
-            assert.string( options.args, 'The options hash must contain an "args" key, with a string or array-of-strings value.' );
-            options.args = [ options.args ];
-        }
-
-
-        const proc = spawn( path.join( kStandAlonePath, binary ), options.args );
-
-        if ( options.stdout ) {
-            assert.func( options.stdout, `"options.stdout" must be a function (was of type ${typeof options.stdout})` );
-            proc.stdout.on( 'data', options.stdout );
-        }
-
-        if ( options.stderr ) {
-            assert.func( options.stderr, `"options.stderr" must be a function (was of type ${typeof options.stderr})` );
-            proc.stderr.on( 'data', options.stderr );
-        }
-
-
-        let spawnError;
-
-        proc.on( 'error', (err) => {
-            spawnError = err;
-        });
-
-
-        proc.on( 'close', (code) => {
-
-            if ( spawnError ) {
-                reject( new ProcessError( code, `Failed to spawn child process: ${spawnError.message}\n${spawnError.stack}` ) );
-                return;
-            }
-
-            if ( code === 0 ) {
-                resolve();
-            } else {
-                reject( new ProcessError( code ) );
-            }
-        });
-    });
-}
