@@ -29,6 +29,7 @@
   },
   "dependencies": {
     "assert-plus": "^1.0.0",
+    "async-exit-hook": "^1.1.1",
     "bluebird": "^3.4.7",
     "gulp": "^3.9.1",
     "gulp-cli": "^1.2.2",

@@ -34,7 +34,7 @@ const paths = {
     config: [ '.eslintrc.js', 'gulpfile.js' ],
     js: [ 'index.js', 'index.test.js', './lib/**/*.js' ],
     jsDev: [ './example/**/*.js' ], // excluded from documentation
-    cpp: [ '*.cpp', './src/**/*.cpp' ],
+    cpp: [ '*.cpp', '*.h', './src/**/*.cpp', './src/**/*.h' ],
     cmake: [ 'NodeJS.cmake', 'CMakeLists.txt' ],
 
     // handle path separator differences ourselves for the following:
