@@ -23,8 +23,8 @@ function installSpawnMockForSuccess( cb ) {
             return this;
         },
 
-        catch( err ) {
-            cb( err );
+        catch() {
+            cb();
             return this;
         }
     }; } );
@@ -82,6 +82,40 @@ describe( 'node-glslang.standalone.glslangValidatorAsync', () => {
         glslang.standalone.glslangValidatorAsync( options, cb );
         expect( spawnProcessAsyncMock ).toHaveBeenCalledWith( jasmine.stringMatching( /glslangValidator/ ), options );
     });
+
+
+    it( 'calls the callback on success', () => {
+
+        const cbMock = jest.fn();
+
+        // installSpawnMockForSuccess( cb );
+
+        let success;
+        let failure;
+
+        spawnProcessAsyncMock.mockImplementationOnce( () => { return {
+            then( callback ) {
+                success = callback;
+                return this;
+            },
+
+            catch( callback ) {
+                failure = callback;
+                return this;
+            }
+        }; } );
+
+        const err = new Error( 'some error' );
+
+
+        expect( () => glslang.standalone.glslangValidatorAsync( {}, cbMock ) ).not.toThrow();
+        expect( () => success() ).not.toThrow();
+        expect( () => failure( err ) ).not.toThrow();
+
+        expect( cbMock.mock.calls.length ).toBe( 2 );
+        expect( cbMock.mock.calls[0] ).toEqual( [] );
+        expect( cbMock.mock.calls[1] ).toEqual( [err] );
+    });
 });
 
 
@@ -108,5 +142,37 @@ describe( 'node-glslang.standalone.spirvRemapAsync', () => {
         installSpawnMockForSuccess( cb );
         glslang.standalone.spirvRemapAsync( options, cb );
         expect( spawnProcessAsyncMock ).toHaveBeenCalledWith( jasmine.stringMatching( /spirv-remap/ ), options );
+    });
+
+
+    it( 'calls the callback on success', () => {
+
+        const cbMock = jest.fn();
+
+        let success;
+        let failure;
+
+        spawnProcessAsyncMock.mockImplementationOnce( () => { return {
+            then( callback ) {
+                success = callback;
+                return this;
+            },
+
+            catch( callback ) {
+                failure = callback;
+                return this;
+            }
+        }; } );
+
+        const err = new Error( 'some error' );
+
+
+        expect( () => glslang.standalone.spirvRemapAsync( {}, cbMock ) ).not.toThrow();
+        expect( () => success() ).not.toThrow();
+        expect( () => failure( err ) ).not.toThrow();
+
+        expect( cbMock.mock.calls.length ).toBe( 2 );
+        expect( cbMock.mock.calls[0] ).toEqual( [] );
+        expect( cbMock.mock.calls[1] ).toEqual( [err] );
     });
 });

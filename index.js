@@ -22,6 +22,7 @@ module.exports = require( 'node-cmake' )( 'node_glslang' );
 assert.ok( ! module.exports.standalone );
 
 
+/* istanbul ignore next */
 require( 'async-exit-hook' )( cb => {
     module.exports.private_finalizeProcess( () => {
         cb();
