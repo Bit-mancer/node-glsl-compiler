@@ -5,7 +5,7 @@
 [![Build Status][travis-image]][travis-url]
 [![Coverage Status][coveralls-image]][coveralls-url]
 
-A node.js wrapper for the Khronos Group's glslang reference compiler front-end.
+A node.js wrapper for the Khronos Group's glslang reference compiler.
 
 _TODO -- work in progress, no releases_
 
