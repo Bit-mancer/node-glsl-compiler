@@ -1,5 +1,7 @@
 'use strict';
 
+/* eslint-disable no-console */
+
 const assert = require( 'assert' );
 const path = require( 'path' );
 const glslang = require( '../index.js' );
