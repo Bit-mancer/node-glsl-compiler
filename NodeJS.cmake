@@ -486,6 +486,10 @@ function(nodejs_init)
     )
     if(NODEJS_NAN_DIR)
         list(APPEND INCLUDE_DIRS ${NODEJS_NAN_DIR})
+    else()
+        message(FATAL_ERROR
+            "Unable to locate NAN module"
+        )
     endif()
 
     # Under windows, we need a bunch of libraries (due to the way

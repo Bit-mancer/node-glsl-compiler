@@ -1,0 +1,2 @@
+# bash scripts need lf (true even under Windows, i.e. Cygwin)
+*.sh text eof=lf
