@@ -12,6 +12,8 @@ namespace NodeGLSLang {
      * roll our own...
      */
 
+    // TODO this class is to be used once glslang supports multithreaded compilation on all platforms...
+
     class WorkList final {
     public:
         WorkList();

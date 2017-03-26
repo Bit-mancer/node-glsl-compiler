@@ -9,7 +9,7 @@ include(NodeJS.cmake)
 nodejs_init()
 
 
-include_directories( "./" )
+include_directories( "./" "./glslang" )
 
 file(GLOB node_glslang_src
     "src/*.cpp"

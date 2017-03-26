@@ -7,6 +7,8 @@
 
 namespace NodeGLSLang {
 
+    // TODO this class is to be used once glslang supports multithreaded compilation on all platforms...
+
     WorkList::WorkList() {
     }
 
