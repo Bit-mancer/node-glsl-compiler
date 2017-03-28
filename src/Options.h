@@ -10,11 +10,14 @@ namespace NodeGLSLang {
         static const int kDefaultDesktopShaderVersion = 110;
 
         const int defaultShaderVersion;
-        const int numWorkerThreads;
+        const int maxWorkerThreads;
 
         Options( int theDefaultShaderVersion = kDefaultESShaderVersion )
                 :   defaultShaderVersion( theDefaultShaderVersion ),
-                    numWorkerThreads( std::thread::hardware_concurrency() != 0 ? std::thread::hardware_concurrency() : 1 ) {
+                    maxWorkerThreads(
+                        1 // TODO: currently glslang only supports multi-threaded compilation on Windows (see TODO notes in IndependentCompiler)
+                        // std::thread::hardware_concurrency() != 0 ? std::thread::hardware_concurrency() : 1
+                    ) {
         }
     };
 
