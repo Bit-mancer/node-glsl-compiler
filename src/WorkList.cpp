@@ -7,13 +7,18 @@
 
 namespace NodeGLSLang {
 
-    // TODO this class is to be used once glslang supports multithreaded compilation on all platforms...
-
     WorkList::WorkList() {
     }
 
 
     WorkList::WorkList( std::list<WorkItemPtr>&& work ) : _work( std::move( work ) ) {
+    }
+
+
+    WorkList::WorkList( const std::vector<WorkItemPtr>& work ) {
+        for ( auto item : work ) {
+            _work.push_back( item );
+        }
     }
 
 

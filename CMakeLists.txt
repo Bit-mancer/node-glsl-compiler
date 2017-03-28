@@ -14,6 +14,7 @@ include_directories( "./" "./glslang" )
 file(GLOB node_glslang_src
     "src/*.cpp"
     "src/*.h"
+    "glslang/StandAlone/ResourceLimits.cpp"
 )
 
 add_nodejs_module( ${PROJECT_NAME} ${node_glslang_src})

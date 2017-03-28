@@ -14,12 +14,31 @@ namespace NodeGLSLang {
      */
 
     struct WorkItem final {
-        const std::string fileName;
-        const EShLanguage stage;
+
+        enum class Status {
+            Skipped,
+            Failure,
+            Success
+        };
+
+
+        const std::string filename;
+
+        bool hasStage;
+        EShLanguage stage;
+
+        Status status = Status::Skipped;
         std::string results;
 
-        WorkItem( const std::string& theFileName, const EShLanguage& theStage )
-                :   fileName( theFileName ),
+
+        WorkItem( const std::string& theFilename )
+                :   filename( theFilename ),
+                    hasStage( false ) {
+        }
+
+        WorkItem( const std::string& theFilename, const EShLanguage& theStage )
+                :   filename( theFilename ),
+                    hasStage( true ),
                     stage( theStage ) {
         }
     };

@@ -2,6 +2,7 @@
 #define _NodeGLSLang_src_WorkList_h_
 
 #include <list>
+#include <vector>
 
 #include "WorkItem.h"
 
@@ -12,12 +13,11 @@ namespace NodeGLSLang {
      * roll our own...
      */
 
-    // TODO this class is to be used once glslang supports multithreaded compilation on all platforms...
-
     class WorkList final {
     public:
         WorkList();
         explicit WorkList( std::list<WorkItemPtr>&& work );
+        explicit WorkList( const std::vector<WorkItemPtr>& work );
 
         void pushBack( const WorkItemPtr& item );
         bool popFront( WorkItemPtr& outItem );
