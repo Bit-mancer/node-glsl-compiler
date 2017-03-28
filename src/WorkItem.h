@@ -17,6 +17,7 @@ namespace NodeGLSLang {
 
         enum class Status {
             Skipped,
+            FileNotFound,
             Failure,
             Success
         };
