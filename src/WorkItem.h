@@ -6,6 +6,8 @@
 
 #include "glslang/glslang/Public/ShaderLang.h"
 
+#include "CompileStatus.h"
+
 namespace NodeGLSLang {
 
     /**
@@ -15,20 +17,12 @@ namespace NodeGLSLang {
 
     struct WorkItem final {
 
-        enum class Status {
-            Skipped,
-            FileNotFound,
-            Failure,
-            Success
-        };
-
-
         const std::string filename;
 
         bool hasStage;
         EShLanguage stage;
 
-        Status status = Status::Skipped;
+        CompileStatus status = CompileStatus::Skipped;
         std::string results;
 
 

@@ -11,6 +11,7 @@
 #include "WorkItem.h"
 #include "WorkList.h"
 #include "GLSLangUtils.h"
+#include "CompileStatus.h"
 
 #include "glslang/glslang/Public/ShaderLang.h"
 #include "glslang/StandAlone/ResourceLimits.h"
@@ -74,7 +75,7 @@ namespace NodeGLSLang {
      *
      * THREAD-SAFETY: This function is thread-safe.
      */
-    static WorkItem::Status compileFile(
+    static CompileStatus compileFile(
             const std::string& filename,
             ShHandle compiler,
             const TBuiltInResource& resources,
@@ -84,11 +85,11 @@ namespace NodeGLSLang {
         std::unique_ptr<char[]> shaderFile;
         size_t length;
         if ( ! readFile( filename, shaderFile, length ) ) {
-            return WorkItem::Status::FileNotFound;
+            return CompileStatus::FileNotFound;
         }
 
         if ( length == 0 ) {
-            return WorkItem::Status::Success;
+            return CompileStatus::Success;
         }
 
         const char* shaderStrings[ 1 ] = { shaderFile.get() };
@@ -109,9 +110,9 @@ namespace NodeGLSLang {
             messages );
 
         if ( ret != 0 ) {
-            return WorkItem::Status::Success;
+            return CompileStatus::Success;
         } else {
-            return WorkItem::Status::Failure;
+            return CompileStatus::Failure;
         }
     }
 
@@ -199,8 +200,8 @@ namespace NodeGLSLang {
 
             if ( ! work->hasStage ) {
                 if ( ! Utils::getStageFromFileExtension( work->filename, work->stage ) ) {
-                    work->status = WorkItem::Status::Failure;
-                    work->results = "Unable to determine stage (language) for file (the file extension was not recognized and no explicit stage was provided).";
+                    work->status = CompileStatus::Failure;
+                    work->results = "Unable to determine stage (the file extension was not recognized and no explicit stage was provided).";
                     continue;
                 }
 
