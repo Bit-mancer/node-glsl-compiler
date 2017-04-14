@@ -16,7 +16,7 @@
 #include "glslang/glslang/Public/ShaderLang.h"
 #include "glslang/StandAlone/ResourceLimits.h"
 
-namespace NodeGLSLang {
+namespace NodeGLSLCompiler {
 
     /**
      * From glslang StandAlone.cpp -- described as "command-line options", but also passed into Sh* funcs...

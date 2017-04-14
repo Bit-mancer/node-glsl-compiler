@@ -1,11 +1,11 @@
-#ifndef _NodeGLSLang_src_GLSLangUtils_h_
-#define _NodeGLSLang_src_GLSLangUtils_h_
+#ifndef _NodeGLSLCompiler_src_GLSLangUtils_h_
+#define _NodeGLSLCompiler_src_GLSLangUtils_h_
 
 #include <string>
 
 #include "glslang/glslang/Public/ShaderLang.h"
 
-namespace NodeGLSLang { namespace Utils {
+namespace NodeGLSLCompiler { namespace Utils {
 
     /**
      * Gets the stage (formerly "language") of the specified file.

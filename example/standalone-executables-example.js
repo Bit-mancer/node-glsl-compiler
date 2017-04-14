@@ -4,7 +4,7 @@
 
 const assert = require( 'assert' );
 const path = require( 'path' );
-const glslang = require( '../index.js' );
+const compiler = require( '../index.js' );
 
 
 // use path.join to avoid forward-slash issues on Windows
@@ -17,21 +17,21 @@ console.log( 'The raw output from glslangValidator and spirv-remap follow (you\'
 console.log( '(check the spirv and spirv-optimized folders for output)' );
 console.log();
 
-glslang.standalone.glslangValidatorAsync( { args: 'pass.frag' }, err => {
+compiler.standalone.glslangValidatorAsync( { args: 'pass.frag' }, err => {
     assert( ! err );
 });
 
-glslang.standalone.glslangValidatorAsync( { args: 'fail.frag' }, err => {
+compiler.standalone.glslangValidatorAsync( { args: 'fail.frag' }, err => {
     assert( err, 'expect an error' );
 });
 
-glslang.standalone.glslangValidatorAsync( { args: ['-G', '-o', kVertSpirv, 'pass.vert'] }, err => {
+compiler.standalone.glslangValidatorAsync( { args: ['-G', '-o', kVertSpirv, 'pass.vert'] }, err => {
     assert( ! err );
 
-    glslang.standalone.glslangValidatorAsync( { args: ['-G', '-o', kFragSpirv, 'pass.frag'] }, err => {
+    compiler.standalone.glslangValidatorAsync( { args: ['-G', '-o', kFragSpirv, 'pass.frag'] }, err => {
         assert( ! err );
 
-        glslang.standalone.spirvRemapAsync( { args: ['--do-everything', '--input', kVertSpirv, kFragSpirv, '-o', kOptimizedDir] }, err => {
+        compiler.standalone.spirvRemapAsync( { args: ['--do-everything', '--input', kVertSpirv, kFragSpirv, '-o', kOptimizedDir] }, err => {
             assert( ! err );
         });
     });

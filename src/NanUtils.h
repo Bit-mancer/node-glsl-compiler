@@ -1,5 +1,5 @@
-#ifndef _NodeGLSLang_src_NanUtils_h_
-#define _NodeGLSLang_src_NanUtils_h_
+#ifndef _NodeGLSLCompiler_src_NanUtils_h_
+#define _NodeGLSLCompiler_src_NanUtils_h_
 
 #include <nan.h>
 

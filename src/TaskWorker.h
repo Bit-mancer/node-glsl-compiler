@@ -1,11 +1,11 @@
-#ifndef _NodeGLSLang_src_TaskWorker_h_
-#define _NodeGLSLang_src_TaskWorker_h_
+#ifndef _NodeGLSLCompiler_src_TaskWorker_h_
+#define _NodeGLSLCompiler_src_TaskWorker_h_
 
 #include <functional>
 
 #include <nan.h>
 
-namespace NodeGLSLang {
+namespace NodeGLSLCompiler {
 
     /**
      * Represents a callable-based (task) libuv async worker.

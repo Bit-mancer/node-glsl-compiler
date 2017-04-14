@@ -11,7 +11,7 @@ jest.mock( 'async-exit-hook' );
 
 require( 'node-cmake' ).mockImplementation( () => { return {}; } );
 
-const glslang = require( './index.js' );
+const compiler = require( './index.js' );
 const spawnProcessAsyncMock = require( './lib/spawnProcessAsync.js' );
 
 
@@ -32,45 +32,45 @@ function installSpawnMockForSuccess( cb ) {
 
 
 
-describe( 'node-glslang', () => {
+describe( 'node-glsl-compiler', () => {
     it( 'is an object', () => {
-        expect( glslang ).toEqual( jasmine.any( Object ) );
+        expect( compiler ).toEqual( jasmine.any( Object ) );
     });
 
     it( 'has a "standalone" property', () => {
-        expect( glslang.standalone ).toBeTruthy();
+        expect( compiler.standalone ).toBeTruthy();
     });
 });
 
 
-describe( 'node-glslang.standalone', () => {
+describe( 'node-glsl-compiler.standalone', () => {
     it( 'is an object', () => {
-        expect( glslang.standalone ).toEqual( jasmine.any( Object ) );
+        expect( compiler.standalone ).toEqual( jasmine.any( Object ) );
     });
 
     it( 'has a "glslangValidatorAsync" property', () => {
-        expect( glslang.standalone.glslangValidatorAsync ).toBeTruthy();
+        expect( compiler.standalone.glslangValidatorAsync ).toBeTruthy();
     });
 
     it( 'has a "spirvRemapAsync" property', () => {
-        expect( glslang.standalone.spirvRemapAsync ).toBeTruthy();
+        expect( compiler.standalone.spirvRemapAsync ).toBeTruthy();
     });
 });
 
 
-describe( 'node-glslang.standalone.glslangValidatorAsync', () => {
+describe( 'node-glsl-compiler.standalone.glslangValidatorAsync', () => {
 
     it( 'is a function', () => {
-        expect( glslang.standalone.glslangValidatorAsync ).toEqual( jasmine.any( Function ) );
+        expect( compiler.standalone.glslangValidatorAsync ).toEqual( jasmine.any( Function ) );
     });
 
     it( 'requires an options hash as the first argument', () => {
         const cb = () => {};
-        expect( () => glslang.standalone.glslangValidatorAsync( 'not an options hash', cb ) ).toThrow();
-        expect( () => glslang.standalone.glslangValidatorAsync( undefined, cb ) ).toThrow();
+        expect( () => compiler.standalone.glslangValidatorAsync( 'not an options hash', cb ) ).toThrow();
+        expect( () => compiler.standalone.glslangValidatorAsync( undefined, cb ) ).toThrow();
 
         installSpawnMockForSuccess( cb );
-        expect( () => glslang.standalone.glslangValidatorAsync( {}, cb ) ).not.toThrow();
+        expect( () => compiler.standalone.glslangValidatorAsync( {}, cb ) ).not.toThrow();
     });
 
     // white-box testing because the black-box form would be a pedantic and laborious duplication of spawnProcessAsync with little benefit...
@@ -79,7 +79,7 @@ describe( 'node-glslang.standalone.glslangValidatorAsync', () => {
         const options = {quiet: true};
         const cb = () => {};
         installSpawnMockForSuccess( cb );
-        glslang.standalone.glslangValidatorAsync( options, cb );
+        compiler.standalone.glslangValidatorAsync( options, cb );
         expect( spawnProcessAsyncMock ).toHaveBeenCalledWith( jasmine.stringMatching( /glslangValidator/ ), options );
     });
 
@@ -108,7 +108,7 @@ describe( 'node-glslang.standalone.glslangValidatorAsync', () => {
         const err = new Error( 'some error' );
 
 
-        expect( () => glslang.standalone.glslangValidatorAsync( {}, cbMock ) ).not.toThrow();
+        expect( () => compiler.standalone.glslangValidatorAsync( {}, cbMock ) ).not.toThrow();
         expect( () => success() ).not.toThrow();
         expect( () => failure( err ) ).not.toThrow();
 
@@ -119,19 +119,19 @@ describe( 'node-glslang.standalone.glslangValidatorAsync', () => {
 });
 
 
-describe( 'node-glslang.standalone.spirvRemapAsync', () => {
+describe( 'node-glsl-compiler.standalone.spirvRemapAsync', () => {
 
     it( 'is a function', () => {
-        expect( glslang.standalone.spirvRemapAsync ).toEqual( jasmine.any( Function ) );
+        expect( compiler.standalone.spirvRemapAsync ).toEqual( jasmine.any( Function ) );
     });
 
     it( 'requires an options hash as the first argument', () => {
         const cb = () => {};
-        expect( () => glslang.standalone.spirvRemapAsync( 'not an options hash', cb ) ).toThrow();
-        expect( () => glslang.standalone.spirvRemapAsync( undefined, cb ) ).toThrow();
+        expect( () => compiler.standalone.spirvRemapAsync( 'not an options hash', cb ) ).toThrow();
+        expect( () => compiler.standalone.spirvRemapAsync( undefined, cb ) ).toThrow();
 
         installSpawnMockForSuccess( cb );
-        expect( () => glslang.standalone.spirvRemapAsync( {}, cb ) ).not.toThrow();
+        expect( () => compiler.standalone.spirvRemapAsync( {}, cb ) ).not.toThrow();
     });
 
     // white-box testing because the black-box form would be a pedantic and laborious duplication of spawnProcessAsync with little benefit...
@@ -140,7 +140,7 @@ describe( 'node-glslang.standalone.spirvRemapAsync', () => {
         const options = {quiet: true};
         const cb = () => {};
         installSpawnMockForSuccess( cb );
-        glslang.standalone.spirvRemapAsync( options, cb );
+        compiler.standalone.spirvRemapAsync( options, cb );
         expect( spawnProcessAsyncMock ).toHaveBeenCalledWith( jasmine.stringMatching( /spirv-remap/ ), options );
     });
 
@@ -167,7 +167,7 @@ describe( 'node-glslang.standalone.spirvRemapAsync', () => {
         const err = new Error( 'some error' );
 
 
-        expect( () => glslang.standalone.spirvRemapAsync( {}, cbMock ) ).not.toThrow();
+        expect( () => compiler.standalone.spirvRemapAsync( {}, cbMock ) ).not.toThrow();
         expect( () => success() ).not.toThrow();
         expect( () => failure( err ) ).not.toThrow();
 

@@ -4,7 +4,7 @@
 
 #include <nan.h>
 
-namespace NodeGLSLang {
+namespace NodeGLSLCompiler {
 
     TaskWorker::TaskWorker( Nan::Callback* callback, std::function<void(Nan::AsyncWorker*)>&& task )
             :   Nan::AsyncWorker( callback ),

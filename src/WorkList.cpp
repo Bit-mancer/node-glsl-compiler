@@ -5,7 +5,7 @@
 
 #include "glslang/glslang/OSDependent/osinclude.h"
 
-namespace NodeGLSLang {
+namespace NodeGLSLCompiler {
 
     WorkList::WorkList() {
     }

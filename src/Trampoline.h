@@ -1,11 +1,11 @@
-#ifndef _NodeGLSLang_src_Trampoline_h_
-#define _NodeGLSLang_src_Trampoline_h_
+#ifndef _NodeGLSLCompiler_src_Trampoline_h_
+#define _NodeGLSLCompiler_src_Trampoline_h_
 
 #include <functional>
 
 #include <nan.h>
 
-namespace NodeGLSLang {
+namespace NodeGLSLCompiler {
 
     /**
      * Bounce a callable to a target libuv event loop.

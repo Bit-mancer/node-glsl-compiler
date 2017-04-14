@@ -185,7 +185,7 @@ gulp.task( 'verify-native-binaries-exist', ['verify-native-configure'], () => {
 gulp.task( 'verify-native-test-binaries-exist', ['verify-native-configure'], () => {
 
     if ( ! fs.existsSync( paths.nativeTests ) ) {
-        throw new Error( 'The glslangtests binary does not exist! (by default, node-glslang does not include the glslang native tests in order to reduce the package size; to run these tests, first run "npm run task clone", then "npm run task configure", then "npm run task build", then re-run the tests)' );
+        throw new Error( 'The glslangtests binary does not exist! (by default, node-glsl-compiler does not include the glslang native tests in order to reduce the package size; to run these tests, first run "npm run task clone", then "npm run task configure", then "npm run task build", then re-run the tests)' );
     }
 });
 

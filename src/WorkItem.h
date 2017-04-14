@@ -1,5 +1,5 @@
-#ifndef _NodeGLSLang_src_WorkItem_h_
-#define _NodeGLSLang_src_WorkItem_h_
+#ifndef _NodeGLSLCompiler_src_WorkItem_h_
+#define _NodeGLSLCompiler_src_WorkItem_h_
 
 #include <string>
 #include <memory>
@@ -8,7 +8,7 @@
 
 #include "CompileStatus.h"
 
-namespace NodeGLSLang {
+namespace NodeGLSLCompiler {
 
     /**
      * We want to handle the stage differently, and the StandAlone TWorkItem has a non-virtual dtor, so let's just

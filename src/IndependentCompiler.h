@@ -1,5 +1,5 @@
-#ifndef _NodeGLSLang_src_IndependentCompiler_h_
-#define _NodeGLSLang_src_IndependentCompiler_h_
+#ifndef _NodeGLSLCompiler_src_IndependentCompiler_h_
+#define _NodeGLSLCompiler_src_IndependentCompiler_h_
 
 #include <vector>
 #include <string>
@@ -11,7 +11,7 @@
 
 #include "glslang/StandAlone/ResourceLimits.h"
 
-namespace NodeGLSLang {
+namespace NodeGLSLCompiler {
 
     /**
      * Multi-threaded independent shader compiler (that is, each shader is compiled as an independent unit, and no

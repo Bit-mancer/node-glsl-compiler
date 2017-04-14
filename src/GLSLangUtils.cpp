@@ -5,7 +5,7 @@
 #include "glslang/glslang/Public/ShaderLang.h"
 
 
-namespace NodeGLSLang { namespace Utils {
+namespace NodeGLSLCompiler { namespace Utils {
 
     bool getStageFromFileExtension( const std::string& filePath, EShLanguage& outStage ) {
 

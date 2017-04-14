@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8.11) # shadow glslang/CMakeLists.txt
 
-project(node_glslang)
+project(node_glsl_compiler)
 
 # Defined AFTER project (see http://public.kitware.com/pipermail/cmake/2010-December/041135.html)
 SET(CMAKE_BUILD_TYPE Release CACHE PATH "build type" FORCE)
@@ -11,13 +11,13 @@ nodejs_init()
 
 include_directories( "./" "./glslang" )
 
-file(GLOB node_glslang_src
+file(GLOB node_glsl_compiler_src
     "src/*.cpp"
     "src/*.h"
     "glslang/StandAlone/ResourceLimits.cpp"
 )
 
-add_nodejs_module( ${PROJECT_NAME} ${node_glslang_src})
+add_nodejs_module( ${PROJECT_NAME} ${node_glsl_compiler_src})
 
 
 set(LIBRARIES

@@ -1,6 +1,6 @@
 # License
 
-node-glslang is licensed under the BSD-3-Clause License (this mirrors the glslang license).
+node-glsl-compiler is licensed under the BSD-3-Clause License (this mirrors the glslang license).
 
 ```
 Copyright 2017 Mike Post

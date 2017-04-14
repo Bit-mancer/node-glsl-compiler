@@ -1,12 +1,12 @@
-#ifndef _NodeGLSLang_src_WorkList_h_
-#define _NodeGLSLang_src_WorkList_h_
+#ifndef _NodeGLSLCompiler_src_WorkList_h_
+#define _NodeGLSLCompiler_src_WorkList_h_
 
 #include <list>
 #include <vector>
 
 #include "WorkItem.h"
 
-namespace NodeGLSLang {
+namespace NodeGLSLCompiler {
 
     /**
      * We want to handle the stage differently, and the StandAlone TWorkItem has a non-virtual dtor, so let's just

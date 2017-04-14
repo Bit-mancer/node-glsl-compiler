@@ -11,7 +11,7 @@
 #include "WorkItem.h"
 #include "WorkList.h"
 
-namespace NodeGLSLang {
+namespace NodeGLSLCompiler {
 
     static TaskQueueThread g_taskQueue;
     static WorkList g_workList;

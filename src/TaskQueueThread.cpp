@@ -9,7 +9,7 @@
 #include <iostream>
 #include <utility>
 
-namespace NodeGLSLang {
+namespace NodeGLSLCompiler {
 
     typedef std::lock_guard<std::mutex> Guard;
 

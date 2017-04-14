@@ -1,5 +1,5 @@
-#ifndef _NodeGLSLang_src_TaskQueueThread_h_
-#define _NodeGLSLang_src_TaskQueueThread_h_
+#ifndef _NodeGLSLCompiler_src_TaskQueueThread_h_
+#define _NodeGLSLCompiler_src_TaskQueueThread_h_
 
 #include <thread>
 #include <future>
@@ -7,7 +7,7 @@
 #include <condition_variable>
 #include <list>
 
-namespace NodeGLSLang {
+namespace NodeGLSLCompiler {
 
     /**
      * Serial task queue running on an std::thread.

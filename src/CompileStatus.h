@@ -1,7 +1,7 @@
-#ifndef _NodeGLSLang_src_CompileStatus_h_
-#define _NodeGLSLang_src_CompileStatus_h_
+#ifndef _NodeGLSLCompiler_src_CompileStatus_h_
+#define _NodeGLSLCompiler_src_CompileStatus_h_
 
-namespace NodeGLSLang {
+namespace NodeGLSLCompiler {
 
     enum class CompileStatus {
         Skipped,

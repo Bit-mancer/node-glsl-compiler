@@ -1,9 +1,9 @@
-#ifndef _NodeGLSLang_src_Options_h_
-#define _NodeGLSLang_src_Options_h_
+#ifndef _NodeGLSLCompiler_src_Options_h_
+#define _NodeGLSLCompiler_src_Options_h_
 
 #include <thread>
 
-namespace NodeGLSLang {
+namespace NodeGLSLCompiler {
 
     struct Options {
         static const int kDefaultESShaderVersion = 100;
